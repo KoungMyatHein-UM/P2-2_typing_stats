@@ -133,9 +133,14 @@ def save_data(clear_buffers=True):
                           once the data is successfully saved. Defaults to True.
     :return: None
     """
+    dir = "data"
+
+    if not os.path.exists(dir):
+        os.makedirs(dir)
+
     base, ext = "typing-timings", ".json"
     ts = datetime.now().strftime("%Y%m%d-%H%M%S")
-    fname = f"{base}-{ts}{ext}"
+    fname = f"{dir}/{base}-{ts}{ext}"
     out = {
         "dwell_times":  dict(dwell_times),
         "flight_times": dict(flight_times),
@@ -184,7 +189,7 @@ def main():
 
     :return: None
     """
-    print("Capturing global keystrokes… press Ctrl+C to stop and save.")
+    print("Capturing global keystrokes… press Ctrl+C to stop and save. Auto saves every hour.")
     keyboard.on_press(on_key_down)
     keyboard.on_release(on_key_up)
     signal.signal(signal.SIGINT, save_and_exit)
