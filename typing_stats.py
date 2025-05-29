@@ -13,100 +13,73 @@ except ImportError:
     exit(1)
 
 # — tunables (in milliseconds) —
-MAX_MS    = 1500    # hard cap: ignore any inter-keystroke gap > this
-GAP_MS    = 1000    # burst split: drop n-gram delays ≥ this
-CONTEXT_K = 5       # max n-gram context length
+MAX_MS    = 1500
+GAP_MS    = 1000
+CONTEXT_K = 5
 
 # — data stores —
-dwell_times   = defaultdict(list)  # "<key>" -> [dwell1, dwell2, …]
-flight_times  = defaultdict(list)  # "[<a>]->[<b>]" -> [flight1, …]
-ngram_times   = defaultdict(list)  # "[<ctx>]->[<key>]" -> [delay1, …]
+dwell_times   = defaultdict(list)
+flight_times  = defaultdict(list)
+ngram_times   = defaultdict(list)
 
 # — for tracking —
-dwell_starts     = {}      # raw_key -> timestamp of key-down
+dwell_starts     = {}
 last_keyup_stamp = None
-last_keyup_key   = None    # raw_key
+last_keyup_key   = None
 
-prev_chars = deque(maxlen=CONTEXT_K)  # raw_key queue
+prev_chars = deque(maxlen=CONTEXT_K)
 prev_stamp = None
 
 running = True
 
-# normalise names to match your JS map
-KEY_MAP = {
-    'space': '␣', 'enter': '\n', 'backspace': '␈',
-    'tab': '⇥', 'esc': '⎋',
-    'left': '←', 'right': '→', 'up': '↑', 'down': '↓',
-    'home': '⇱', 'end': '⇲',
-    'page up': '⇞', 'page down': '⇟',
-    'delete': '⌦', 'insert': '⎀'
-}
-
 def norm(key_name):
-    """Map keyboard event.name to our atomic symbol."""
-    # return KEY_MAP.get(key_name.lower(), key_name.lower())
     return key_name
 
 def wrap(sym):
-    """Encapsulate an atomic symbol in angle brackets."""
     return f"<{sym}>"
 
+# — core handlers —
 def on_key_down(event):
     global last_keyup_stamp, last_keyup_key, prev_stamp
-
-    key = norm(event.name)              # raw atomic symbol
+    key = norm(event.name); now = time.perf_counter() * 1000
     wrapped = wrap(key)
-    now = time.perf_counter() * 1000    # ms
 
-    # — flight time —
-    if last_keyup_stamp is not None and last_keyup_key is not None:
+    # flight
+    if last_keyup_stamp is not None:
         prev_wrapped = wrap(last_keyup_key)
         fk = f"[{prev_wrapped}]->[{wrapped}]"
         flight_times[fk].append(int(now - last_keyup_stamp))
 
-    # — n-gram delays —
+    # n-gram
     if prev_stamp is not None and prev_chars:
         gap = now - prev_stamp
         if gap < GAP_MS and gap <= MAX_MS:
-            # for each possible context length
             for j in range(1, len(prev_chars) + 1):
-                ctx_slice = list(prev_chars)[-j:]
-                ctx_wrapped = ''.join(wrap(c) for c in ctx_slice)
+                ctx = list(prev_chars)[-j:]
+                ctx_wrapped = ''.join(wrap(c) for c in ctx)
                 pk = f"[{ctx_wrapped}]->[{wrapped}]"
                 ngram_times[pk].append(int(gap))
 
-    # — start dwell timing —
+    # dwell start
     dwell_starts[key] = now
-
-    # — update buffer & stamp —
     prev_chars.append(key)
     prev_stamp = now
 
 def on_key_up(event):
     global last_keyup_stamp, last_keyup_key
-
-    key = norm(event.name)
-    wrapped = wrap(key)
-    now = time.perf_counter() * 1000    # ms
-
-    # — record dwell time —
+    key = norm(event.name); now = time.perf_counter() * 1000
     if key in dwell_starts:
         dwell = now - dwell_starts.pop(key)
-        dwell_times[wrapped].append(int(dwell))
-
-    # — prepare for next flight —
+        dwell_times[wrap(key)].append(int(dwell))
     last_keyup_stamp = now
-    last_keyup_key   = key
+    last_keyup_key = key
 
-def save_and_exit(signum, frame):
-    """On Ctrl+C, dump JSON (avoiding overwrite by adding timestamp)."""
-    global running
-
-    base = "typing-timings"
-    ext  = ".json"
+# — saving logic —
+def save_data(clear_buffers=True):
+    """Dump current timings to a timestamped file; optionally clear."""
+    base, ext = "typing-timings", ".json"
     ts = datetime.now().strftime("%Y%m%d-%H%M%S")
     fname = f"{base}-{ts}{ext}"
-
     out = {
         "dwell_times":  dict(dwell_times),
         "flight_times": dict(flight_times),
@@ -114,8 +87,18 @@ def save_and_exit(signum, frame):
     }
     with open(fname, "w") as f:
         json.dump(out, f, indent=2)
+    print(f"\n[Saved to {fname}]")
 
-    print(f"\nSaved timing data to {fname}. Cheers!")
+    if clear_buffers:
+        dwell_times.clear()
+        flight_times.clear()
+        ngram_times.clear()
+
+def save_and_exit(signum, frame):
+    """SIGINT handler: save one last time and quit."""
+    global running
+    save_data(clear_buffers=False)
+    print("Cheers! Exiting.")
     running = False
 
 def main():
@@ -124,8 +107,12 @@ def main():
     keyboard.on_release(on_key_up)
     signal.signal(signal.SIGINT, save_and_exit)
 
+    last_hourly = time.time()
     while running:
         time.sleep(0.1)
+        if time.time() - last_hourly >= 3600:
+            save_data(clear_buffers=True)
+            last_hourly = time.time()
 
 if __name__ == "__main__":
     main()
