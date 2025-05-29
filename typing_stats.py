@@ -33,13 +33,43 @@ prev_stamp = None
 running = True
 
 def norm(key_name):
+    """
+    Normalize a given key name and return it unchanged. This function takes a string
+    and simply returns it without performing any transformation or processing.
+
+    :param key_name: The key name to be normalized.
+    :type key_name: str
+    :return: The unchanged key name.
+    :rtype: str
+    """
     return key_name
 
 def wrap(sym):
+    """
+    Wraps a given symbol with angle brackets.
+
+    This function takes a single symbol and returns the symbol enclosed
+    within angle brackets ('<', '>'). It is commonly used for formatting
+    or representing elements with specific delimiters.
+
+    :param sym: The symbol to be wrapped within angle brackets
+    :type sym: str
+    :return: A string where the input symbol is wrapped with angle brackets
+    :rtype: str
+    """
     return f"<{sym}>"
 
 # — core handlers —
 def on_key_down(event):
+    """
+    Handles the key-down event and updates timing data for flight times, n-gram
+    times, and dwell start times. The method processes normalized key inputs and
+    calculates timing for key events based on previous key press timestamps.
+
+    :param event: The key event object containing information about the key press.
+    :type event: Any
+    :return: None
+    """
     global last_keyup_stamp, last_keyup_key, prev_stamp
     key = norm(event.name); now = time.perf_counter() * 1000
     wrapped = wrap(key)
@@ -66,6 +96,20 @@ def on_key_down(event):
     prev_stamp = now
 
 def on_key_up(event):
+    """
+    Handles the event triggered when a key is released. Captures the key's dwell
+    time (duration it was held down) and updates relevant global variables for
+    processing dwell times and recording the key release event.
+
+    This function processes the timing of when a specific key is released, computes
+    the dwell time from when the key was first pressed, and stores this information
+    for further analysis. Additionally, it updates the global variables to track
+    the last key released and the time of release.
+
+    :param event: The key event containing details about the release action of a
+                  specific key, such as its name.
+    :type event: Any
+    """
     global last_keyup_stamp, last_keyup_key
     key = norm(event.name); now = time.perf_counter() * 1000
     if key in dwell_starts:
@@ -76,7 +120,19 @@ def on_key_up(event):
 
 # — saving logic —
 def save_data(clear_buffers=True):
-    """Dump current timings to a timestamped file; optionally clear."""
+    """
+    Saves typing timing data to a JSON file and optionally clears the internal buffers
+    after saving. The function generates a timestamped filename based on the current
+    datetime, serializes the timing data stored in `dwell_times`, `flight_times`, and
+    `ngram_times` dictionaries, and writes it to the generated file in a JSON format.
+    The optional clearing of buffers allows the usage of this function as part of a
+    buffer resetting mechanism after persisting data.
+
+    :param clear_buffers: A boolean parameter that determines whether the `dwell_times`,
+                          `flight_times`, and `ngram_times` dictionaries should be cleared
+                          once the data is successfully saved. Defaults to True.
+    :return: None
+    """
     base, ext = "typing-timings", ".json"
     ts = datetime.now().strftime("%Y%m%d-%H%M%S")
     fname = f"{base}-{ts}{ext}"
@@ -95,13 +151,39 @@ def save_data(clear_buffers=True):
         ngram_times.clear()
 
 def save_and_exit(signum, frame):
-    """SIGINT handler: save one last time and quit."""
+    """
+    Handles termination signals to gracefully save data and exit the program.
+
+    This function is designed to handle the termination signals (such as SIGTERM or
+    SIGINT). Upon receiving the signal, any unsaved data is saved, and the program
+    is terminated gracefully. This ensures that data consistency and integrity are
+    maintained even during abrupt terminations.
+
+    :param signum: The signal number that was received indicating termination.
+    :type signum: int
+    :param frame: The current stack frame (as provided by the signal handler).
+    :type frame: FrameType
+    :return: None
+    """
     global running
     save_data(clear_buffers=False)
     print("Cheers! Exiting.")
     running = False
 
 def main():
+    """
+    Captures global keystrokes, processes them, and manages saving the data at regular intervals
+    or when the program exits. It listens for key press and release events to track user input.
+    The program also automatically saves tracked data hourly for safety and persistency.
+
+    :param running: A flag to control the main loop execution and allow graceful termination.
+    :type running: bool
+
+    :raises KeyboardInterrupt: Triggered when the user presses Ctrl+C to save data and stop
+                               the application.
+
+    :return: None
+    """
     print("Capturing global keystrokes… press Ctrl+C to stop and save.")
     keyboard.on_press(on_key_down)
     keyboard.on_release(on_key_up)
