@@ -1,0 +1,99 @@
+{
+  "dwell_times": {},
+  "flight_times": {},
+  "ngram_times": {
+    "[<None>]->[<enter>]": [
+      118,
+      125
+    ],
+    "[<enter><None>]->[<enter>]": [
+      118,
+      125
+    ],
+    "[<None><enter><None>]->[<enter>]": [
+      118,
+      125
+    ],
+    "[<None><None><enter><None>]->[<enter>]": [
+      118
+    ],
+    "[<None><None><None><enter><None>]->[<enter>]": [
+      118
+    ],
+    "[<enter><None><enter><None>]->[<enter>]": [
+      125
+    ],
+    "[<None><enter><None><enter><None>]->[<enter>]": [
+      125
+    ],
+    "[<None>]->[<None>]": [
+      176,
+      103,
+      133
+    ],
+    "[<enter><None>]->[<None>]": [
+      176
+    ],
+    "[<None><enter><None>]->[<None>]": [
+      176
+    ],
+    "[<enter><None><enter><None>]->[<None>]": [
+      176
+    ],
+    "[<None><enter><None><enter><None>]->[<None>]": [
+      176
+    ],
+    "[<None><None>]->[<None>]": [
+      103,
+      133
+    ],
+    "[<enter><None><None>]->[<None>]": [
+      103
+    ],
+    "[<None><enter><None><None>]->[<None>]": [
+      103
+    ],
+    "[<enter><None><enter><None><None>]->[<None>]": [
+      103
+    ],
+    "[<None><None><None>]->[<None>]": [
+      133
+    ],
+    "[<enter><None><None><None>]->[<None>]": [
+      133
+    ],
+    "[<None><enter><None><None><None>]->[<None>]": [
+      133
+    ],
+    "[<None>]->[<down>]": [
+      511
+    ],
+    "[<None><None>]->[<down>]": [
+      511
+    ],
+    "[<None><None><None>]->[<down>]": [
+      511
+    ],
+    "[<None><None><None><None>]->[<down>]": [
+      511
+    ],
+    "[<enter><None><None><None><None>]->[<down>]": [
+      511
+    ],
+    "[<down>]->[<enter>]": [
+      325
+    ],
+    "[<None><down>]->[<enter>]": [
+      325
+    ],
+    "[<None><None><down>]->[<enter>]": [
+      325
+    ],
+    "[<None><None><None><down>]->[<enter>]": [
+      325
+    ],
+    "[<None><None><None><None><down>]->[<enter>]": [
+      325
+    ]
+  }
+}

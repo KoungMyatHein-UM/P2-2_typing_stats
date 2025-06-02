@@ -1,0 +1,49 @@
+{
+  "dwell_times": {},
+  "flight_times": {},
+  "ngram_times": {
+    "[<left windows>]->[<left windows>]": [
+      503,
+      30
+    ],
+    "[<C><left windows>]->[<left windows>]": [
+      503
+    ],
+    "[<C><C><left windows>]->[<left windows>]": [
+      503
+    ],
+    "[<enter><C><C><left windows>]->[<left windows>]": [
+      503
+    ],
+    "[<l><enter><C><C><left windows>]->[<left windows>]": [
+      503
+    ],
+    "[<left windows><left windows>]->[<left windows>]": [
+      30
+    ],
+    "[<C><left windows><left windows>]->[<left windows>]": [
+      30
+    ],
+    "[<C><C><left windows><left windows>]->[<left windows>]": [
+      30
+    ],
+    "[<enter><C><C><left windows><left windows>]->[<left windows>]": [
+      30
+    ],
+    "[<left windows>]->[<l>]": [
+      18
+    ],
+    "[<left windows><left windows>]->[<l>]": [
+      18
+    ],
+    "[<left windows><left windows><left windows>]->[<l>]": [
+      18
+    ],
+    "[<C><left windows><left windows><left windows>]->[<l>]": [
+      18
+    ],
+    "[<C><C><left windows><left windows><left windows>]->[<l>]": [
+      18
+    ]
+  }
+}

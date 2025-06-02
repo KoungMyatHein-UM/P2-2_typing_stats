@@ -1,0 +1,762 @@
+{
+  "dwell_times": {},
+  "flight_times": {},
+  "ngram_times": {
+    "[<command>]->[<None>]": [
+      126,
+      116,
+      188,
+      364,
+      104,
+      112,
+      56,
+      108,
+      125,
+      102
+    ],
+    "[<None><command>]->[<None>]": [
+      126,
+      188,
+      364,
+      56
+    ],
+    "[<None><None><command>]->[<None>]": [
+      126,
+      56
+    ],
+    "[<shift><None><None><command>]->[<None>]": [
+      126
+    ],
+    "[<shift><shift><None><None><command>]->[<None>]": [
+      126
+    ],
+    "[<None>]->[<space>]": [
+      157,
+      78,
+      105,
+      43,
+      102,
+      119,
+      87,
+      107
+    ],
+    "[<None><None>]->[<space>]": [
+      157,
+      78,
+      105,
+      43,
+      102,
+      119,
+      87,
+      107
+    ],
+    "[<command><None><None>]->[<space>]": [
+      157
+    ],
+    "[<None><command><None><None>]->[<space>]": [
+      157
+    ],
+    "[<None><None><command><None><None>]->[<space>]": [
+      157
+    ],
+    "[<space>]->[<None>]": [
+      418,
+      141,
+      154,
+      177,
+      617,
+      231
+    ],
+    "[<None><space>]->[<None>]": [
+      418,
+      141,
+      154,
+      177,
+      617,
+      231
+    ],
+    "[<None><None><space>]->[<None>]": [
+      418,
+      141,
+      154,
+      177,
+      617,
+      231
+    ],
+    "[<command><None><None><space>]->[<None>]": [
+      418
+    ],
+    "[<None><command><None><None><space>]->[<None>]": [
+      418
+    ],
+    "[<None>]->[<None>]": [
+      228,
+      216,
+      122,
+      75,
+      70,
+      63,
+      79,
+      123,
+      74,
+      130,
+      81,
+      103,
+      83,
+      59,
+      132,
+      51,
+      121,
+      66,
+      115,
+      162,
+      63,
+      127,
+      188,
+      94,
+      103,
+      128,
+      364,
+      113,
+      46,
+      103
+    ],
+    "[<space><None>]->[<None>]": [
+      228,
+      63,
+      79,
+      74,
+      103,
+      83,
+      66
+    ],
+    "[<None><space><None>]->[<None>]": [
+      228,
+      63,
+      79,
+      74,
+      103,
+      83,
+      66
+    ],
+    "[<None><None><space><None>]->[<None>]": [
+      228,
+      63,
+      79,
+      74,
+      103,
+      83,
+      66
+    ],
+    "[<command><None><None><space><None>]->[<None>]": [
+      228
+    ],
+    "[<None><None>]->[<None>]": [
+      216,
+      75,
+      70,
+      123,
+      130,
+      81,
+      59,
+      132,
+      51,
+      121,
+      115,
+      162,
+      63,
+      127,
+      94,
+      103,
+      128,
+      364,
+      46,
+      103
+    ],
+    "[<space><None><None>]->[<None>]": [
+      216,
+      123,
+      130,
+      59,
+      115
+    ],
+    "[<None><space><None><None>]->[<None>]": [
+      216,
+      123,
+      130,
+      59,
+      115
+    ],
+    "[<None><None><space><None><None>]->[<None>]": [
+      216,
+      123,
+      130,
+      59,
+      115
+    ],
+    "[<None>]->[<shift>]": [
+      831,
+      991
+    ],
+    "[<None><None>]->[<shift>]": [
+      831
+    ],
+    "[<None><None><None>]->[<shift>]": [
+      831
+    ],
+    "[<space><None><None><None>]->[<shift>]": [
+      831
+    ],
+    "[<None><space><None><None><None>]->[<shift>]": [
+      831
+    ],
+    "[<shift>]->[<down>]": [
+      799
+    ],
+    "[<None><shift>]->[<down>]": [
+      799
+    ],
+    "[<None><None><shift>]->[<down>]": [
+      799
+    ],
+    "[<None><None><None><shift>]->[<down>]": [
+      799
+    ],
+    "[<space><None><None><None><shift>]->[<down>]": [
+      799
+    ],
+    "[<down>]->[<enter>]": [
+      497
+    ],
+    "[<shift><down>]->[<enter>]": [
+      497
+    ],
+    "[<None><shift><down>]->[<enter>]": [
+      497
+    ],
+    "[<None><None><shift><down>]->[<enter>]": [
+      497
+    ],
+    "[<None><None><None><shift><down>]->[<enter>]": [
+      497
+    ],
+    "[<enter><command>]->[<None>]": [
+      116,
+      108
+    ],
+    "[<down><enter><command>]->[<None>]": [
+      116
+    ],
+    "[<shift><down><enter><command>]->[<None>]": [
+      116
+    ],
+    "[<None><shift><down><enter><command>]->[<None>]": [
+      116
+    ],
+    "[<command><None><command>]->[<None>]": [
+      188,
+      364
+    ],
+    "[<enter><command><None><command>]->[<None>]": [
+      188
+    ],
+    "[<down><enter><command><None><command>]->[<None>]": [
+      188
+    ],
+    "[<None>]->[<command>]": [
+      345,
+      872
+    ],
+    "[<command><None>]->[<command>]": [
+      345
+    ],
+    "[<None><command><None>]->[<command>]": [
+      345
+    ],
+    "[<command><None><command><None>]->[<command>]": [
+      345
+    ],
+    "[<enter><command><None><command><None>]->[<command>]": [
+      345
+    ],
+    "[<None><command><None><command>]->[<None>]": [
+      364
+    ],
+    "[<command><None><command><None><command>]->[<None>]": [
+      364
+    ],
+    "[<shift>]->[<None>]": [
+      93,
+      152
+    ],
+    "[<None><shift>]->[<None>]": [
+      93,
+      152
+    ],
+    "[<command><None><shift>]->[<None>]": [
+      93,
+      152
+    ],
+    "[<None><command><None><shift>]->[<None>]": [
+      93
+    ],
+    "[<command><None><command><None><shift>]->[<None>]": [
+      93
+    ],
+    "[<shift><None>]->[<None>]": [
+      122
+    ],
+    "[<None><shift><None>]->[<None>]": [
+      122
+    ],
+    "[<command><None><shift><None>]->[<None>]": [
+      122
+    ],
+    "[<None><command><None><shift><None>]->[<None>]": [
+      122
+    ],
+    "[<shift><None><None>]->[<None>]": [
+      75,
+      162
+    ],
+    "[<None><shift><None><None>]->[<None>]": [
+      75,
+      162
+    ],
+    "[<command><None><shift><None><None>]->[<None>]": [
+      75,
+      162
+    ],
+    "[<None><None><None>]->[<None>]": [
+      70,
+      81,
+      132,
+      51,
+      121,
+      63,
+      127,
+      103,
+      128,
+      364,
+      103
+    ],
+    "[<shift><None><None><None>]->[<None>]": [
+      70,
+      63
+    ],
+    "[<None><shift><None><None><None>]->[<None>]": [
+      70,
+      63
+    ],
+    "[<None><None><None>]->[<space>]": [
+      78,
+      43,
+      102,
+      87,
+      107
+    ],
+    "[<None><None><None><None>]->[<space>]": [
+      78,
+      102,
+      87
+    ],
+    "[<shift><None><None><None><None>]->[<space>]": [
+      78
+    ],
+    "[<None><None><None><space>]->[<None>]": [
+      141,
+      177,
+      617,
+      231
+    ],
+    "[<None><None><None><None><space>]->[<None>]": [
+      141,
+      617,
+      231
+    ],
+    "[<None><None><None><space><None>]->[<None>]": [
+      63,
+      74,
+      103,
+      66
+    ],
+    "[<space><None><None>]->[<space>]": [
+      105,
+      119
+    ],
+    "[<None><space><None><None>]->[<space>]": [
+      105,
+      119
+    ],
+    "[<None><None><space><None><None>]->[<space>]": [
+      105,
+      119
+    ],
+    "[<space><None><None><space>]->[<None>]": [
+      154
+    ],
+    "[<None><space><None><None><space>]->[<None>]": [
+      154
+    ],
+    "[<space><None><None><space><None>]->[<None>]": [
+      79,
+      83
+    ],
+    "[<space><None><None><None>]->[<space>]": [
+      43,
+      107
+    ],
+    "[<None><space><None><None><None>]->[<space>]": [
+      43,
+      107
+    ],
+    "[<space><None><None><None><space>]->[<None>]": [
+      177
+    ],
+    "[<space><None><None><None>]->[<None>]": [
+      81,
+      132
+    ],
+    "[<None><space><None><None><None>]->[<None>]": [
+      81,
+      132
+    ],
+    "[<space><None><None><None><None>]->[<space>]": [
+      102
+    ],
+    "[<None><None><None><None>]->[<None>]": [
+      51,
+      121,
+      127,
+      128,
+      364
+    ],
+    "[<space><None><None><None><None>]->[<None>]": [
+      51
+    ],
+    "[<None><None><None><None><None>]->[<None>]": [
+      121,
+      364
+    ],
+    "[<None><None><None><None><None>]->[<space>]": [
+      87
+    ],
+    "[<space>]->[<space>]": [
+      379
+    ],
+    "[<None><space>]->[<space>]": [
+      379
+    ],
+    "[<None><None><space>]->[<space>]": [
+      379
+    ],
+    "[<None><None><None><space>]->[<space>]": [
+      379
+    ],
+    "[<space><None><None><None><space>]->[<space>]": [
+      379
+    ],
+    "[<space><command>]->[<None>]": [
+      104
+    ],
+    "[<space><space><command>]->[<None>]": [
+      104
+    ],
+    "[<None><space><space><command>]->[<None>]": [
+      104
+    ],
+    "[<None><None><space><space><command>]->[<None>]": [
+      104
+    ],
+    "[<command><None>]->[<shift>]": [
+      991
+    ],
+    "[<space><command><None>]->[<shift>]": [
+      991
+    ],
+    "[<space><space><command><None>]->[<shift>]": [
+      991
+    ],
+    "[<None><space><space><command><None>]->[<shift>]": [
+      991
+    ],
+    "[<shift>]->[<tab>]": [
+      133
+    ],
+    "[<None><shift>]->[<tab>]": [
+      133
+    ],
+    "[<command><None><shift>]->[<tab>]": [
+      133
+    ],
+    "[<space><command><None><shift>]->[<tab>]": [
+      133
+    ],
+    "[<space><space><command><None><shift>]->[<tab>]": [
+      133
+    ],
+    "[<tab>]->[<tab>]": [
+      191
+    ],
+    "[<shift><tab>]->[<tab>]": [
+      191
+    ],
+    "[<None><shift><tab>]->[<tab>]": [
+      191
+    ],
+    "[<command><None><shift><tab>]->[<tab>]": [
+      191
+    ],
+    "[<space><command><None><shift><tab>]->[<tab>]": [
+      191
+    ],
+    "[<delete><command>]->[<None>]": [
+      112,
+      125,
+      102
+    ],
+    "[<tab><delete><command>]->[<None>]": [
+      112
+    ],
+    "[<tab><tab><delete><command>]->[<None>]": [
+      112
+    ],
+    "[<shift><tab><tab><delete><command>]->[<None>]": [
+      112
+    ],
+    "[<delete><command><None><shift>]->[<None>]": [
+      152
+    ],
+    "[<tab><delete><command><None><shift>]->[<None>]": [
+      152
+    ],
+    "[<shift><None><None><None><None>]->[<None>]": [
+      127
+    ],
+    "[<None><None>]->[<command>]": [
+      872
+    ],
+    "[<None><None><None>]->[<command>]": [
+      872
+    ],
+    "[<None><None><None><None>]->[<command>]": [
+      872
+    ],
+    "[<None><None><None><None><None>]->[<command>]": [
+      872
+    ],
+    "[<None><None><None><command>]->[<None>]": [
+      56
+    ],
+    "[<None><None><None><None><command>]->[<None>]": [
+      56
+    ],
+    "[<None>]->[<enter>]": [
+      639,
+      245
+    ],
+    "[<None><None>]->[<enter>]": [
+      639,
+      245
+    ],
+    "[<command><None><None>]->[<enter>]": [
+      639
+    ],
+    "[<None><command><None><None>]->[<enter>]": [
+      639
+    ],
+    "[<None><None><command><None><None>]->[<enter>]": [
+      639
+    ],
+    "[<enter>]->[<command>]": [
+      480
+    ],
+    "[<None><enter>]->[<command>]": [
+      480
+    ],
+    "[<None><None><enter>]->[<command>]": [
+      480
+    ],
+    "[<command><None><None><enter>]->[<command>]": [
+      480
+    ],
+    "[<None><command><None><None><enter>]->[<command>]": [
+      480
+    ],
+    "[<None><enter><command>]->[<None>]": [
+      108
+    ],
+    "[<None><None><enter><command>]->[<None>]": [
+      108
+    ],
+    "[<command><None><None><enter><command>]->[<None>]": [
+      108
+    ],
+    "[<shift>]->[<delete>]": [
+      840
+    ],
+    "[<None><shift>]->[<delete>]": [
+      840
+    ],
+    "[<command><None><shift>]->[<delete>]": [
+      840
+    ],
+    "[<enter><command><None><shift>]->[<delete>]": [
+      840
+    ],
+    "[<None><enter><command><None><shift>]->[<delete>]": [
+      840
+    ],
+    "[<shift><delete><command>]->[<None>]": [
+      125
+    ],
+    "[<None><shift><delete><command>]->[<None>]": [
+      125
+    ],
+    "[<command><None><shift><delete><command>]->[<None>]": [
+      125
+    ],
+    "[<delete>]->[<delete>]": [
+      184,
+      231
+    ],
+    "[<None><delete>]->[<delete>]": [
+      184
+    ],
+    "[<command><None><delete>]->[<delete>]": [
+      184
+    ],
+    "[<delete><command><None><delete>]->[<delete>]": [
+      184
+    ],
+    "[<shift><delete><command><None><delete>]->[<delete>]": [
+      184
+    ],
+    "[<delete><delete>]->[<delete>]": [
+      231
+    ],
+    "[<None><delete><delete>]->[<delete>]": [
+      231
+    ],
+    "[<command><None><delete><delete>]->[<delete>]": [
+      231
+    ],
+    "[<delete><command><None><delete><delete>]->[<delete>]": [
+      231
+    ],
+    "[<delete><None>]->[<None>]": [
+      188,
+      113
+    ],
+    "[<delete><delete><None>]->[<None>]": [
+      188
+    ],
+    "[<delete><delete><delete><None>]->[<None>]": [
+      188
+    ],
+    "[<None><delete><delete><delete><None>]->[<None>]": [
+      188
+    ],
+    "[<delete><None><None>]->[<None>]": [
+      94,
+      46
+    ],
+    "[<delete><delete><None><None>]->[<None>]": [
+      94
+    ],
+    "[<delete><delete><delete><None><None>]->[<None>]": [
+      94
+    ],
+    "[<delete><None><None><None>]->[<None>]": [
+      103,
+      103
+    ],
+    "[<delete><delete><None><None><None>]->[<None>]": [
+      103
+    ],
+    "[<delete><None><None><None><None>]->[<None>]": [
+      128
+    ],
+    "[<None>]->[<delete>]": [
+      390
+    ],
+    "[<None><None>]->[<delete>]": [
+      390
+    ],
+    "[<None><None><None>]->[<delete>]": [
+      390
+    ],
+    "[<None><None><None><None>]->[<delete>]": [
+      390
+    ],
+    "[<None><None><None><None><None>]->[<delete>]": [
+      390
+    ],
+    "[<delete>]->[<None>]": [
+      268
+    ],
+    "[<None><delete>]->[<None>]": [
+      268
+    ],
+    "[<None><None><delete>]->[<None>]": [
+      268
+    ],
+    "[<None><None><None><delete>]->[<None>]": [
+      268
+    ],
+    "[<None><None><None><None><delete>]->[<None>]": [
+      268
+    ],
+    "[<None><delete><None>]->[<None>]": [
+      113
+    ],
+    "[<None><None><delete><None>]->[<None>]": [
+      113
+    ],
+    "[<None><None><None><delete><None>]->[<None>]": [
+      113
+    ],
+    "[<None><delete><None><None>]->[<None>]": [
+      46
+    ],
+    "[<None><None><delete><None><None>]->[<None>]": [
+      46
+    ],
+    "[<None><delete><None><None><None>]->[<None>]": [
+      103
+    ],
+    "[<None><None><None>]->[<enter>]": [
+      245
+    ],
+    "[<None><None><None><None>]->[<enter>]": [
+      245
+    ],
+    "[<delete><None><None><None><None>]->[<enter>]": [
+      245
+    ],
+    "[<enter><delete><command>]->[<None>]": [
+      102
+    ],
+    "[<None><enter><delete><command>]->[<None>]": [
+      102
+    ],
+    "[<None><None><enter><delete><command>]->[<None>]": [
+      102
+    ],
+    "[<ctrl>]->[<None>]": [
+      66
+    ],
+    "[<delete><ctrl>]->[<None>]": [
+      66
+    ],
+    "[<None><delete><ctrl>]->[<None>]": [
+      66
+    ],
+    "[<command><None><delete><ctrl>]->[<None>]": [
+      66
+    ],
+    "[<delete><command><None><delete><ctrl>]->[<None>]": [
+      66
+    ]
+  }
+}
