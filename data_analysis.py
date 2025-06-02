@@ -26,6 +26,7 @@ else:
     timings_array = np.array(all_timings)
 
     # Calculate overall stats
+    std_dev = np.std(timings_array)
     stats = {
         "count": len(timings_array),
         "min": np.min(timings_array),
@@ -37,7 +38,8 @@ else:
         "95% high": np.percentile(timings_array, 95),
         "99% high": np.percentile(timings_array, 99),
         "max": np.max(timings_array),
-        "std_dev": np.std(timings_array)
+        "std_dev": std_dev,
+        "variance": std_dev ** 2
     }
     # Display the results without scientific notation
     pd.set_option("display.float_format", "{:.5f}".format)

@@ -2,6 +2,7 @@ import glob
 import os
 import json
 from collections import defaultdict
+import numpy as np
 
 
 def collect_ngram_times(data_dir):
@@ -124,6 +125,65 @@ def get_relative_score(unweighted_score, weighted_score, max_ratio=5.0):
     return (ratio - 1) / (max_ratio - 1)
 
 
+def get_flatness_score(test_data, model_data=None, expected_variability=30.0, penalty_weight=1.0, structure_weight=1.0):
+    """
+    Penalises:
+    - Low inter-pattern variance
+    - Low intra-pattern variance
+    - Optional: flattened per-pattern structure vs model
+    Returns a value between 0 and penalty_weight + structure_weight
+    """
+    # Inter-pattern: mean timings across patterns
+    pattern_means = [np.mean(t) for t in test_data.values() if t]
+    inter_std = np.std(pattern_means) if pattern_means else 0
+
+    # Intra-pattern: jitter within each pattern
+    intra_jitters = [np.std(t) for t in test_data.values() if len(t) > 1]
+    intra_std = np.mean(intra_jitters) if intra_jitters else 0
+
+    flatness_component = 1.0 - min((inter_std + intra_std) / expected_variability, 1.0)
+    flatness_score = flatness_component * penalty_weight
+
+    # Optional: structure comparison (only if model_data provided)
+    structure_score = 0
+    if model_data:
+        shared_patterns = set(test_data.keys()) & set(model_data.keys())
+        if len(shared_patterns) >= 3:  # need at least 3 to make shape meaningful
+            test_means = []
+            model_means = []
+            for pattern in shared_patterns:
+                if test_data[pattern] and model_data[pattern]:
+                    test_means.append(np.mean(test_data[pattern]))
+                    model_means.append(np.mean(model_data[pattern]))
+
+            test_norm = (np.array(test_means) - np.mean(test_means)) / (np.std(test_means) + 1e-6)
+            model_norm = (np.array(model_means) - np.mean(model_means)) / (np.std(model_means) + 1e-6)
+
+            structure_score = np.mean((test_norm - model_norm) ** 2) * structure_weight
+
+    return min(flatness_score + structure_score, 1.0)
+
+# Colour constants (ANSI escape codes)
+RESET   = "\033[0m"
+RED     = "\033[31m"
+GREEN   = "\033[32m"
+YELLOW  = "\033[33m"
+BLUE    = "\033[34m"
+MAGENTA = "\033[35m"
+CYAN    = "\033[36m"
+BOLD    = "\033[1m"
+
+
+def get_final_score(model_patterns, test_patterns, alpha=0.3):
+    flatness_score = get_flatness_score(test_patterns, model_data=model_patterns, expected_variability=30.0, penalty_weight=1.0)
+    weighted_score = get_weighted_score(model_patterns, test_patterns)
+    score = get_score(model_patterns, test_patterns)
+    hybrid_score = get_relative_score(score, weighted_score)
+    final_score = (hybrid_score * (1 - alpha)) + (flatness_score * alpha)
+
+    return final_score
+
+
 if __name__ == "__main__":
     data_dir = "../data"
     test_dir = "../test"
@@ -140,15 +200,12 @@ if __name__ == "__main__":
 
             # Extract timing data
             ngram_times = test_data.get('ngram_times', {})
-
-            score = get_score(all_patterns, ngram_times)
-            print(f"MSE Score for {os.path.basename(test_file)}: {score}")
-
-            weighted_score = get_weighted_score(all_patterns, ngram_times)
-            print(f"Weighted score for {os.path.basename(test_file)}: {weighted_score}")
-
-            combined_score = get_relative_score(score, weighted_score)
-            print(f"Combined score for {os.path.basename(test_file)}: {combined_score}")
+            score = get_final_score(all_patterns, ngram_times)
+            print(
+                f"{CYAN}Final score for {os.path.basename(test_file)}:{RESET} "
+                f"{GREEN if score < 0.3 else (YELLOW if score < 0.7 else RED)}"
+                f"{score:.4f}{RESET}"
+            )
 
 
         except (json.JSONDecodeError, IOError) as e:
