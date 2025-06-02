@@ -1,5 +1,5 @@
 ### POST ngram_times data to Flask
-POST http://127.0.0.1:5000/receive-json
+POST  http://127.0.0.1:5000/receive-json
 Content-Type: application/json
 
 {

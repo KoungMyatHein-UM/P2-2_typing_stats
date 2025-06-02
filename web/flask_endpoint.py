@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from knn.knn import get_final_score, collect_ngram_times
 
 app = Flask(__name__)
-data_dir = "data"
+data_dir = "../data"
 all_patterns = collect_ngram_times(data_dir)
 
 @app.route('/receive-json', methods=['POST'])
@@ -14,4 +14,4 @@ def receive_json():
     return jsonify({"status": "received", "score": final_score}), 200
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False, host='0.0.0.0', port=5000)

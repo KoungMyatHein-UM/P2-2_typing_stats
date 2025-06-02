@@ -5,6 +5,33 @@ from collections import defaultdict
 import numpy as np
 
 
+def trim_ngram_times(raw_ngram_times, lower_percentile=0):
+    if lower_percentile == 0:
+        return raw_ngram_times
+
+    upper_percentile = 100 - lower_percentile
+
+    trimmed = {}
+
+    total_before = sum(len(v) for v in raw_ngram_times.values())
+    print(f"Before: {total_before}")
+
+    for pattern, timings in raw_ngram_times.items():
+        if not timings:
+            continue
+
+        arr = np.array(timings)
+        low = np.percentile(arr, lower_percentile)
+        high = np.percentile(arr, upper_percentile)
+        trimmed_arr = arr[(arr >= low) & (arr <= high)]
+        trimmed[pattern] = trimmed_arr.tolist()
+
+    total_after  = sum(len(v) for v in trimmed.values())
+    print(f"After: {total_after}")
+
+    return trimmed
+
+
 def collect_ngram_times(data_dir):
     ngram_times = defaultdict(list)
 
@@ -20,15 +47,21 @@ def collect_ngram_times(data_dir):
             for pattern, timings in data["ngram_times"].items():
                 ngram_times[pattern].extend(timings)
 
-    return dict(ngram_times)
+    trimmed_ngram_times = trim_ngram_times(ngram_times)
+
+    return dict(trimmed_ngram_times)
 
 
 def normalise(max, min, value):
     return 0.5 if max == min else (value - min) / (max - min)
 
 
-def get_score(model, pattern_data):
-    mean_squared_error = 0
+def get_score(model, pattern_data, n_neighbors=3):
+    """
+    Compute an average MSE over patterns by comparing each timing
+    only to its n_neighbors closest model timings (after normalisation).
+    """
+    total_mse = 0.0
     total_patterns = 0
 
     for pattern, timings in pattern_data.items():
@@ -39,28 +72,52 @@ def get_score(model, pattern_data):
         if not model_timings or not timings:
             continue  # Skip if either list is empty
 
-        combined_timings = model_timings + timings
-        max_timing = max(combined_timings)
-        min_timing = min(combined_timings)
+        # Combine to find min/max for normalisation
+        combined = np.array(model_timings + timings, dtype=float)
+        min_t, max_t = combined.min(), combined.max()
 
-        squared_errors = 0
-        for timing in timings:
-            timing = normalise(max_timing, min_timing, timing)
-            for model_timing in model_timings:
-                model_timing = normalise(max_timing, min_timing, model_timing)
-                squared_errors += (timing - model_timing) ** 2
+        # Normalise both lists into [0, 1]
+        mt_arr = (np.array(model_timings, dtype=float) - min_t) / (max_t - min_t)
+        t_arr  = (np.array(timings, dtype=float)      - min_t) / (max_t - min_t)
 
-        mean_squared_error += squared_errors / (len(timings) * len(model_timings))
+        pattern_mse = 0.0
+        for t_norm in t_arr:
+            # Compute distances to all model points in normalised space
+            dists = np.abs(mt_arr - t_norm)
+            # Select up to n_neighbors nearest neighbours
+            k = min(n_neighbors, len(mt_arr))
+            nearest_idxs = np.argpartition(dists, k - 1)[:k]
+            nearest_vals = mt_arr[nearest_idxs]
+
+            # Squared errors against those k neighbours
+            sq_errs = (t_norm - nearest_vals) ** 2
+            pattern_mse += sq_errs.mean()  # average of those k squared‐errors
+
+        # Now average over all timings in this pattern
+        pattern_mse /= len(t_arr)
+        total_mse += pattern_mse
         total_patterns += 1
 
     if total_patterns == 0:
-        return None  # Or float('inf'), depending on how you want to handle this
+        return None  # or float('inf') if you prefer
 
-    return mean_squared_error / total_patterns
+    return total_mse / total_patterns
 
-
-def get_weighted_score(model, pattern_data, fast_penalty_factor=5.0, soft_fast_penalty=2.0, hard_fast_threshold=25, soft_fast_threshold=40, max_timing_cap=600):
-    mean_squared_error = 0
+def get_weighted_score(
+        model,
+        pattern_data,
+        n_neighbors=3,
+        fast_penalty_factor=5.0,
+        soft_fast_penalty=2.0,
+        hard_fast_threshold=25,
+        soft_fast_threshold=40,
+        max_timing_cap=600
+):
+    """
+    Compute an average weighted MSE over patterns by comparing each test timing
+    only to its n_neighbors closest model timings (after normalisation and capping).
+    """
+    total_weighted_mse = 0.0
     total_patterns = 0
 
     for pattern, timings in pattern_data.items():
@@ -71,37 +128,55 @@ def get_weighted_score(model, pattern_data, fast_penalty_factor=5.0, soft_fast_p
         if not model_timings or not timings:
             continue
 
-        # Cap timings to reduce the influence of long outliers
+        # 1) Cap both model and test timings to reduce outlier influence
         capped_model = [min(t, max_timing_cap) for t in model_timings]
-        capped_test = [min(t, max_timing_cap) for t in timings]
-        combined = capped_model + capped_test
+        capped_test  = [min(t, max_timing_cap) for t in timings]
+        combined     = np.array(capped_model + capped_test, dtype=float)
 
-        max_timing = max(combined)
-        min_timing = min(combined)
+        # 2) Find overall min/max for normalisation
+        min_t, max_t = combined.min(), combined.max()
 
-        squared_errors = 0
-        for t in capped_test:
-            norm_t = normalise(max_timing, min_timing, t)
+        # 3) Normalise model and test lists into [0, 1]
+        mt_arr = (np.array(capped_model, dtype=float) - min_t) / (max_t - min_t)
+        t_arr  = (np.array(capped_test,  dtype=float) - min_t) / (max_t - min_t)
 
-            for mt in capped_model:
-                norm_mt = normalise(max_timing, min_timing, mt)
-                error = norm_t - norm_mt
+        pattern_mse = 0.0
+        for raw_t, t_norm in zip(capped_test, t_arr):
+            # Compute absolute distances to all normalised model points
+            dists = np.abs(mt_arr - t_norm)
 
-                # Penalise faster timings more
-                if t < hard_fast_threshold:
-                    squared_errors += (error ** 2) * fast_penalty_factor
-                elif t < soft_fast_threshold:
-                    squared_errors += (error ** 2) * soft_fast_penalty
+            # Pick up to n_neighbors nearest neighbours
+            k = min(n_neighbors, len(mt_arr))
+            nearest_idxs = np.argpartition(dists, k - 1)[:k]
+            nearest_mt_norms = mt_arr[nearest_idxs]
+
+            # For each neighbour, calculate weighted squared error
+            sq_errs = []
+            for mt_norm in nearest_mt_norms:
+                err = t_norm - mt_norm
+
+                # Decide penalty factor based on raw (capped) timing
+                if raw_t < hard_fast_threshold:
+                    weight = fast_penalty_factor
+                elif raw_t < soft_fast_threshold:
+                    weight = soft_fast_penalty
                 else:
-                    squared_errors += error ** 2
+                    weight = 1.0
 
-        mean_squared_error += squared_errors / (len(capped_test) * len(capped_model))
+                sq_errs.append((err ** 2) * weight)
+
+            # Average the k weighted squared-errors for this t
+            pattern_mse += np.mean(sq_errs)
+
+        # Average over all test timings in this pattern
+        pattern_mse /= len(t_arr)
+        total_weighted_mse += pattern_mse
         total_patterns += 1
 
     if total_patterns == 0:
-        return None
+        return None  # or float('inf'), if you’d rather
 
-    return mean_squared_error / total_patterns
+    return total_weighted_mse / total_patterns
 
 
 def get_relative_score(unweighted_score, weighted_score, max_ratio=5.0):
@@ -174,7 +249,7 @@ CYAN    = "\033[36m"
 BOLD    = "\033[1m"
 
 
-def get_final_score(model_patterns, test_patterns, alpha=0.3):
+def get_final_score(model_patterns, test_patterns, alpha=0.25):
     flatness_score = get_flatness_score(test_patterns, model_data=model_patterns, expected_variability=30.0, penalty_weight=1.0)
     weighted_score = get_weighted_score(model_patterns, test_patterns)
     score = get_score(model_patterns, test_patterns)
