@@ -1,0 +1,47 @@
+{
+  "dwell_times": {},
+  "flight_times": {},
+  "ngram_times": {
+    "[<ctrl>]->[<v>]": [
+      132,
+      189
+    ],
+    "[<enter><ctrl>]->[<v>]": [
+      132,
+      189
+    ],
+    "[<right shift><enter><ctrl>]->[<v>]": [
+      132
+    ],
+    "[<]><right shift><enter><ctrl>]->[<v>]": [
+      132
+    ],
+    "[<backspace><]><right shift><enter><ctrl>]->[<v>]": [
+      132
+    ],
+    "[<v>]->[<enter>]": [
+      477
+    ],
+    "[<ctrl><v>]->[<enter>]": [
+      477
+    ],
+    "[<enter><ctrl><v>]->[<enter>]": [
+      477
+    ],
+    "[<right shift><enter><ctrl><v>]->[<enter>]": [
+      477
+    ],
+    "[<]><right shift><enter><ctrl><v>]->[<enter>]": [
+      477
+    ],
+    "[<v><enter><ctrl>]->[<v>]": [
+      189
+    ],
+    "[<ctrl><v><enter><ctrl>]->[<v>]": [
+      189
+    ],
+    "[<enter><ctrl><v><enter><ctrl>]->[<v>]": [
+      189
+    ]
+  }
+}
