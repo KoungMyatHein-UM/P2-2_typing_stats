@@ -5,11 +5,9 @@ from collections import defaultdict
 import numpy as np
 
 
-def trim_ngram_times(raw_ngram_times, lower_percentile=0):
+def trim_ngram_times(raw_ngram_times, lower_percentile=15, upper_percentile=100):
     if lower_percentile == 0:
         return raw_ngram_times
-
-    upper_percentile = 100 - lower_percentile
 
     trimmed = {}
 
@@ -200,7 +198,7 @@ def get_relative_score(unweighted_score, weighted_score, max_ratio=5.0):
     return (ratio - 1) / (max_ratio - 1)
 
 
-def get_flatness_score(test_data, model_data=None, expected_variability=30.0, penalty_weight=1.0, structure_weight=1.0):
+def get_flatness_score(test_data, model_data=None, expected_variability=80.0, penalty_weight=0.3, structure_weight=0.3):
     """
     Penalises:
     - Low inter-pattern variance
@@ -238,28 +236,31 @@ def get_flatness_score(test_data, model_data=None, expected_variability=30.0, pe
 
     return min(flatness_score + structure_score, 1.0)
 
-# Colour constants (ANSI escape codes)
-RESET   = "\033[0m"
-RED     = "\033[31m"
-GREEN   = "\033[32m"
-YELLOW  = "\033[33m"
-BLUE    = "\033[34m"
-MAGENTA = "\033[35m"
-CYAN    = "\033[36m"
-BOLD    = "\033[1m"
 
-
-def get_final_score(model_patterns, test_patterns, alpha=0.25):
+def get_final_score(model_patterns, test_patterns, alpha=0.35):
     flatness_score = get_flatness_score(test_patterns, model_data=model_patterns, expected_variability=30.0, penalty_weight=1.0)
     weighted_score = get_weighted_score(model_patterns, test_patterns)
     score = get_score(model_patterns, test_patterns)
     hybrid_score = get_relative_score(score, weighted_score)
     final_score = (hybrid_score * (1 - alpha)) + (flatness_score * alpha)
 
+    print(f"\n=====\nhybrid score: {hybrid_score:.6f}, flatness score: {flatness_score:.6f}, final score: {final_score:.6f}\n=====\n")
+
+
     return final_score
 
 
 if __name__ == "__main__":
+    # Colour constants (ANSI escape codes)
+    RESET   = "\033[0m"
+    RED     = "\033[31m"
+    GREEN   = "\033[32m"
+    YELLOW  = "\033[33m"
+    BLUE    = "\033[34m"
+    MAGENTA = "\033[35m"
+    CYAN    = "\033[36m"
+    BOLD    = "\033[1m"
+
     data_dir = "../data"
     test_dir = "../test"
     
